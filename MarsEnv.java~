@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class MarsEnv extends Environment {
 
-    public static final int GSize = 7; // grid size
+    public static final int GSize = 9; // grid size
     public static final int GARB  = 16; // garbage code in grid model
 	public static final int GARBVIDRO  = 17;
 	public static final int GARBPLASTICO  = 18;
@@ -66,7 +66,7 @@ public class MarsEnv extends Environment {
         updatePercepts();
 
         try {
-            Thread.sleep(200);
+            Thread.sleep(500);
         } catch (Exception e) {}
         informAgsEnvironmentChanged();
         return true;
@@ -108,7 +108,7 @@ public class MarsEnv extends Environment {
         Random random = new Random(System.currentTimeMillis());
 
         private MarsModel() {
-            super(GSize, GSize, 2);
+            super(GSize, GSize, 3);
             
             // initial location of agents
             try {
@@ -217,7 +217,10 @@ public class MarsEnv extends Environment {
                     label += " - G";
                     c = Color.orange;
                 }
+            }else if (id == 2) {
+                c = Color.red;
             }
+			
             super.drawAgent(g, x, y, c, -1);
             if (id == 0) {
                 g.setColor(Color.black);

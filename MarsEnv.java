@@ -16,7 +16,7 @@ public class MarsEnv extends Environment {
     public static final int GARB  = 16; // garbage code in grid model
 	public static final int GARBVIDRO  = 17;
 	public static final int GARBPLASTICO  = 18;
-	public static final int GARBVIDROPAPEL  = 19;
+	public static final int GARBPAPEL  = 19;
 	public static final int GARBORGANICO  = 20;
 	
     public static final Term    ns = Literal.parseLiteral("next(slot)");
@@ -26,6 +26,9 @@ public class MarsEnv extends Environment {
     public static final Literal g1 = Literal.parseLiteral("garbage(r1)");
     public static final Literal g2 = Literal.parseLiteral("garbage(r2)");
 	public static final Literal g3 = Literal.parseLiteral("garbage(r3)");
+	public static final Literal g4 = Literal.parseLiteral("garbage(r4)");
+	public static final Literal g5 = Literal.parseLiteral("garbage(r5)");
+	public static final Literal g6 = Literal.parseLiteral("garbage(r6)");
 	
     static Logger logger = Logger.getLogger(MarsEnv.class.getName());
 
@@ -79,14 +82,23 @@ public class MarsEnv extends Environment {
         Location r1Loc = model.getAgPos(0);
         Location r2Loc = model.getAgPos(1);
 		Location r3Loc = model.getAgPos(2);
+		Location r4Loc = model.getAgPos(3);
+		Location r5Loc = model.getAgPos(4);
+		Location r6Loc = model.getAgPos(5);
         
         Literal pos1 = Literal.parseLiteral("pos(r1," + r1Loc.x + "," + r1Loc.y + ")");
         Literal pos2 = Literal.parseLiteral("pos(r2," + r2Loc.x + "," + r2Loc.y + ")");
 		Literal pos3 = Literal.parseLiteral("pos(r3," + r3Loc.x + "," + r3Loc.y + ")");
+		Literal pos4 = Literal.parseLiteral("pos(r4," + r4Loc.x + "," + r4Loc.y + ")");
+		Literal pos5 = Literal.parseLiteral("pos(r5," + r5Loc.x + "," + r5Loc.y + ")");
+		Literal pos6 = Literal.parseLiteral("pos(r6," + r6Loc.x + "," + r6Loc.y + ")");
 		
         addPercept(pos1);
         addPercept(pos2);
 		addPercept(pos3);
+		addPercept(pos4);
+		addPercept(pos5);
+		addPercept(pos6);
         
         if (model.hasObject(GARB, r1Loc)) {
             addPercept(g1);
@@ -96,6 +108,15 @@ public class MarsEnv extends Environment {
         }
 		if (model.hasObject(GARB, r3Loc)) {
             addPercept(g3);
+        }
+		if (model.hasObject(GARB, r4Loc)) {
+            addPercept(g4);
+        }
+		if (model.hasObject(GARB, r5Loc)) {
+            addPercept(g5);
+        }
+		if (model.hasObject(GARB, r6Loc)) {
+            addPercept(g6);
         }
     }
 
@@ -108,7 +129,7 @@ public class MarsEnv extends Environment {
         Random random = new Random(System.currentTimeMillis());
 
         private MarsModel() {
-            super(GSize, GSize, 3);
+            super(GSize, GSize, 6);
             
             // initial location of agents
             try {
@@ -119,15 +140,21 @@ public class MarsEnv extends Environment {
 				
 				Location r3Loc = new Location(2,6);
                 setAgPos(2, r3Loc);
+				
+				setAgPos(3, 2, 2);
+				
+				setAgPos(4, 6, 2);
+				
+				setAgPos(5, 6, 6);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             
             // initial location of garbage
             add(GARB, 3, 0);
-			add(GARB, 1, 1);
-            add(GARB, GSize-1, 0);
-            add(GARB, 1, 2);
+			add(GARBVIDRO, 1, 1);
+            add(GARBPAPEL, GSize-1, 0);
+            add(GARBORGANICO, 1, 2);
             add(GARB, 0, GSize-2);
             add(GARB, GSize-1, GSize-1);
 	
@@ -203,22 +230,35 @@ public class MarsEnv extends Environment {
         @Override
         public void draw(Graphics g, int x, int y, int object) {
             switch (object) {
-                case MarsEnv.GARB: drawGarb(g, x, y);  break;
+                case MarsEnv.GARB: drawGarb(g, x, y,Color.white);  break;
+				case MarsEnv.GARBVIDRO: drawGarb(g, x, y,Color.green);  break;
+				case MarsEnv.GARBPLASTICO: drawGarb(g, x, y,Color.red);  break;
+				case MarsEnv.GARBPAPEL: drawGarb(g, x, y,Color.blue);  break;
+				case MarsEnv.GARBORGANICO: drawGarb(g, x, y,Color.black);  break;
             }
         }
 
         @Override
         public void drawAgent(Graphics g, int x, int y, Color c, int id) {
             String label = "R"+(id+1);
-            c = Color.blue;
+            c = Color.blue; //papel
             if (id == 0) {
                 c = Color.yellow;
                 if (((MarsModel)model).r1HasGarb) {
                     label += " - G";
                     c = Color.orange;
                 }
-            }else if (id == 2) {
+            }else if (id == 2) { //plastico
                 c = Color.red;
+            }
+			else if (id == 3) { //toxico
+                c = Color.pink;
+            }
+			else if (id == 4) { //organico
+                c = Color.black;
+            }
+			else if (id == 5) { //vidro
+                c = Color.green;
             }
 			
             super.drawAgent(g, x, y, c, -1);
@@ -231,9 +271,9 @@ public class MarsEnv extends Environment {
             repaint();
         }
 
-        public void drawGarb(Graphics g, int x, int y) {
+        public void drawGarb(Graphics g, int x, int y, Color c) {
             super.drawObstacle(g, x, y);
-            g.setColor(Color.WHITE);
+            g.setColor(c);
             drawString(g, x, y, defaultFont,"G");
         }
 
