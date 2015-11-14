@@ -10,47 +10,21 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
 
 /* Plans */
 
-+!check(slots) : not garbage(r1) & not garbagev(r1) & not garbagepa(r1) & not garbagepl(r1)  & not garbageo(r1)
++!check(slots) : not garbage(r1) & not garbagev(r1) & not garbagepa(r1) & not garbagepl(r1)
    <- next(slot);
       !check(slots).
 +!check(slots). 
 
-//ORGANICO
-@log[atomic]
-+garbageo(r1) : not .desire(carry_topo(r5))
-   <- !carry_topo(r5).
-   
-+!carry_topo(R)
-   <- // remember where to go back
-      ?pos(r1,X,Y); 
-      -+pos(last,X,Y);
-      
-      !takeo(garb,R);
-      
-      // goes back and continue to check
-      !at(last); 
-      !check(slots).
-
-+!takeo(S,L) : true
-   <- !ensure_picko(S); 
-      !at(L);
-      drop(S).
-
-+!ensure_picko(S) : garbageo(r1)
-   <- pick(garb);
-      !ensure_picko(S).
-+!ensure_picko(_).
-
-//PLASTICO
 @lplg[atomic]
-+garbagepl(r1) : not .desire(carry_topl(r3))
-   <- !carry_topl(r3).
++garbagepl(r1) : not .desire(carry_topl(r2))
+   <- !carry_topl(r2).
    
 +!carry_topl(R)
    <- // remember where to go back
       ?pos(r1,X,Y); 
       -+pos(last,X,Y);
       
+      // carry garbage to r2
       !takepl(garb,R);
       
       // goes back and continue to check
@@ -67,7 +41,6 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
       !ensure_pickpl(S).
 +!ensure_pickpl(_).
 
-//PAPEL
 @lpag[atomic]
 +garbagepa(r1) : not .desire(carry_topa(r2))
    <- !carry_topa(r2).
@@ -77,6 +50,7 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
       ?pos(r1,X,Y); 
       -+pos(last,X,Y);
       
+      // carry garbage to r2
       !takepa(garb,R);
       
       // goes back and continue to check
@@ -93,7 +67,6 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
       !ensure_pickpa(S).
 +!ensure_pickpa(_).
 
-//TOXICO
 @lag[atomic]
 +garbage(r1) : not .desire(carry_tot(r4))
    <- !carry_tot(r4).
@@ -103,6 +76,7 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
       ?pos(r1,X,Y); 
       -+pos(last,X,Y);
       
+      // carry garbage to r2
       !taket(garb,R);
       
       // goes back and continue to check
@@ -118,8 +92,7 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
    <- pick(garb);
       !ensure_pickt(S).
 +!ensure_pickt(_).
-
-//VIDRO
+   
 @lg[atomic]
 +garbagev(r1) : not .desire(carry_to(r6))
    <- !carry_to(r6).
@@ -129,6 +102,7 @@ at(P) :- pos(P,X,Y) & pos(r1,X,Y).
       ?pos(r1,X,Y); 
       -+pos(last,X,Y);
       
+      // carry garbage to r2
       !take(garb,R);
       
       // goes back and continue to check

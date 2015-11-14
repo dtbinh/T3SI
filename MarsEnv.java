@@ -24,6 +24,10 @@ public class MarsEnv extends Environment {
     public static final Term    dg = Literal.parseLiteral("drop(garb)");
     public static final Term    bg = Literal.parseLiteral("burn(garb)");
     public static final Literal g1 = Literal.parseLiteral("garbage(r1)");
+	public static final Literal g1v = Literal.parseLiteral("garbagev(r1)");
+	public static final Literal g1pl = Literal.parseLiteral("garbagepl(r1)");
+	public static final Literal g1pa = Literal.parseLiteral("garbagepa(r1)");
+	public static final Literal g1o = Literal.parseLiteral("garbageo(r1)");
     public static final Literal g2 = Literal.parseLiteral("garbage(r2)");
 	public static final Literal g3 = Literal.parseLiteral("garbage(r3)");
 	public static final Literal g4 = Literal.parseLiteral("garbage(r4)");
@@ -103,19 +107,31 @@ public class MarsEnv extends Environment {
         if (model.hasObject(GARB, r1Loc)) {
             addPercept(g1);
         }
-        if (model.hasObject(GARB, r2Loc)) {
-            addPercept(g2);
-        }
-		if (model.hasObject(GARB, r3Loc)) {
-            addPercept(g3);
-        }
-		if (model.hasObject(GARB, r4Loc)) {
+        if (model.hasObject(GARB, r4Loc)) {
             addPercept(g4);
         }
-		if (model.hasObject(GARB, r5Loc)) {
+		if (model.hasObject(GARBPAPEL, r1Loc)) {
+            addPercept(g1pa);
+        }
+		if (model.hasObject(GARBPAPEL, r2Loc)) {
+            addPercept(g2);
+        }
+		if (model.hasObject(GARBPLASTICO, r1Loc)) {
+            addPercept(g1pl);
+        }
+		if (model.hasObject(GARBPLASTICO, r3Loc)) {
+            addPercept(g3);
+        }
+		if (model.hasObject(GARBORGANICO, r1Loc)) {
+            addPercept(g1o);
+        }
+		if (model.hasObject(GARBORGANICO, r5Loc)) {
             addPercept(g5);
         }
-		if (model.hasObject(GARB, r6Loc)) {
+		if (model.hasObject(GARBVIDRO, r1Loc)) {
+            addPercept(g1v);
+        }
+		if (model.hasObject(GARBVIDRO, r6Loc)) {
             addPercept(g6);
         }
     }
@@ -125,6 +141,10 @@ public class MarsEnv extends Environment {
         public static final int MErr = 2; // max error in pick garb
         int nerr; // number of tries of pick garb
         boolean r1HasGarb = false; // whether r1 is carrying garbage or not
+		boolean r1HasGarbVidro = false; // whether r1 is carrying garbage or not
+		boolean r1HasGarbPapel = false; // whether r1 is carrying garbage or not
+		boolean r1HasGarbPlastico = false; // whether r1 is carrying garbage or not
+		boolean r1HasGarbOrganico = false; // whether r1 is carrying garbage or not
 
         Random random = new Random(System.currentTimeMillis());
 
@@ -154,8 +174,11 @@ public class MarsEnv extends Environment {
             add(GARB, 3, 0);
 			add(GARBVIDRO, 1, 1);
             add(GARBPAPEL, GSize-1, 0);
+			add(GARBPAPEL, 5, 7);
+			add(GARB, 2, 4);
             add(GARBORGANICO, 1, 2);
-            add(GARB, 0, GSize-2);
+            add(GARBPLASTICO, 0, GSize-2);
+			add(GARBPLASTICO, 6, 3);
             add(GARB, GSize-1, GSize-1);
 	
         }
@@ -210,17 +233,86 @@ public class MarsEnv extends Environment {
                     nerr++;
                 }
             }
+			else if (model.hasObject(GARBVIDRO, getAgPos(0))) {
+                // sometimes the "picking" action doesn't work
+                // but never more than MErr times
+                if (random.nextBoolean() || nerr == MErr) {
+                    remove(GARBVIDRO, getAgPos(0));
+                    nerr = 0;
+                    r1HasGarbVidro = true;
+                } else {
+                    nerr++;
+                }
+            }
+			else if (model.hasObject(GARBPAPEL, getAgPos(0))) {
+                // sometimes the "picking" action doesn't work
+                // but never more than MErr times
+                if (random.nextBoolean() || nerr == MErr) {
+                    remove(GARBPAPEL, getAgPos(0));
+                    nerr = 0;
+                    r1HasGarbPapel = true;
+                } else {
+                    nerr++;
+                }
+            }
+			else if (model.hasObject(GARBPLASTICO, getAgPos(0))) {
+                // sometimes the "picking" action doesn't work
+                // but never more than MErr times
+                if (random.nextBoolean() || nerr == MErr) {
+                    remove(GARBPLASTICO, getAgPos(0));
+                    nerr = 0;
+                    r1HasGarbPlastico = true;
+                } else {
+                    nerr++;
+                }
+            }
+			else if (model.hasObject(GARBORGANICO, getAgPos(0))) {
+                // sometimes the "picking" action doesn't work
+                // but never more than MErr times
+                if (random.nextBoolean() || nerr == MErr) {
+                    remove(GARBORGANICO, getAgPos(0));
+                    nerr = 0;
+                    r1HasGarbOrganico = true;
+                } else {
+                    nerr++;
+                }
+            }
         }
         void dropGarb() {
             if (r1HasGarb) {
                 r1HasGarb = false;
                 add(GARB, getAgPos(0));
             }
+			else if (r1HasGarbVidro) {
+                r1HasGarbVidro = false;
+                add(GARBVIDRO, getAgPos(0));
+            }
+			else if (r1HasGarbPapel) {
+                r1HasGarbPapel = false;
+                add(GARBPAPEL, getAgPos(0));
+            }
+			else if (r1HasGarbPlastico) {
+                r1HasGarbPlastico = false;
+                add(GARBPLASTICO, getAgPos(0));
+            }
+			else if (r1HasGarbOrganico) {
+                r1HasGarbOrganico = false;
+                add(GARBORGANICO, getAgPos(0));
+            }
+			
         }
         void burnGarb() {
             // r2 location has garbage
-            if (model.hasObject(GARB, getAgPos(1))) {
-                remove(GARB, getAgPos(1));
+            if (model.hasObject(GARB, getAgPos(3))) {
+                remove(GARB, getAgPos(3));
+            }else if (model.hasObject(GARBVIDRO, getAgPos(5))) {
+                remove(GARBVIDRO, getAgPos(5));
+            }else if (model.hasObject(GARBPAPEL, getAgPos(1))) {
+                remove(GARBPAPEL, getAgPos(1));
+            }else if (model.hasObject(GARBPLASTICO, getAgPos(2))) {
+                remove(GARBPLASTICO, getAgPos(2));
+            }else if (model.hasObject(GARBORGANICO, getAgPos(4))) {
+                remove(GARBORGANICO, getAgPos(4));
             }
         }
     }
@@ -252,7 +344,8 @@ public class MarsEnv extends Environment {
             c = Color.blue; //papel
             if (id == 0) {
                 c = Color.yellow;
-                if (((MarsModel)model).r1HasGarb) {
+                if (((MarsModel)model).r1HasGarb || ((MarsModel)model).r1HasGarbPlastico || ((MarsModel)model).r1HasGarbPapel || 
+				((MarsModel)model).r1HasGarbOrganico || ((MarsModel)model).r1HasGarbVidro) {
                     label += " - G";
                     c = Color.orange;
                 }
