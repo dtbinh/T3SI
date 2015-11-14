@@ -13,11 +13,11 @@ import java.util.logging.Logger;
 public class MarsEnv extends Environment {
 
     public static final int GSize = 9; // grid size
-    public static final int GARB  = 16; // garbage code in grid model
-	public static final int GARBVIDRO  = 17;
-	public static final int GARBPLASTICO  = 18;
-	public static final int GARBPAPEL  = 19;
-	public static final int GARBORGANICO  = 20;
+    public static final int GARB  = 8; // garbage code in grid model
+	public static final int GARBVIDRO  = 16;
+	public static final int GARBPLASTICO  = 32;
+	public static final int GARBPAPEL  = 64;
+	public static final int GARBORGANICO  = 128;
 	
     public static final Term    ns = Literal.parseLiteral("next(slot)");
     public static final Term    pg = Literal.parseLiteral("pick(garb)");
@@ -173,6 +173,10 @@ public class MarsEnv extends Environment {
             }
             setAgPos(0, r1);
             setAgPos(1, getAgPos(1)); // just to draw it in the view
+			setAgPos(2, getAgPos(2)); // just to draw it in the view
+			setAgPos(3, getAgPos(3)); // just to draw it in the view
+			setAgPos(4, getAgPos(4)); // just to draw it in the view
+			setAgPos(5, getAgPos(5)); // just to draw it in the view
         }
         
         void moveTowards(int x, int y) throws Exception {
@@ -187,6 +191,10 @@ public class MarsEnv extends Environment {
                 r1.y--;
             setAgPos(0, r1);
             setAgPos(1, getAgPos(1)); // just to draw it in the view
+			setAgPos(2, getAgPos(2)); // just to draw it in the view
+			setAgPos(3, getAgPos(3)); // just to draw it in the view
+			setAgPos(4, getAgPos(4)); // just to draw it in the view
+			setAgPos(5, getAgPos(5)); // just to draw it in the view
         }
         
         void pickGarb() {
@@ -230,11 +238,11 @@ public class MarsEnv extends Environment {
         @Override
         public void draw(Graphics g, int x, int y, int object) {
             switch (object) {
-                case MarsEnv.GARB: drawGarb(g, x, y,Color.white);  break;
-				case MarsEnv.GARBVIDRO: drawGarb(g, x, y,Color.green);  break;
-				case MarsEnv.GARBPLASTICO: drawGarb(g, x, y,Color.red);  break;
-				case MarsEnv.GARBPAPEL: drawGarb(g, x, y,Color.blue);  break;
-				case MarsEnv.GARBORGANICO: drawGarb(g, x, y,Color.black);  break;
+                case MarsEnv.GARB: drawGarb(g, x, y,Color.white,"GT");  break;
+				case MarsEnv.GARBVIDRO: drawGarb(g, x, y,Color.green,"GV");  break;
+				case MarsEnv.GARBPLASTICO: drawGarb(g, x, y,Color.red,"GPL");  break;
+				case MarsEnv.GARBPAPEL: drawGarb(g, x, y,Color.blue,"GPA");  break;
+				case MarsEnv.GARBORGANICO: drawGarb(g, x, y,Color.black,"GO");  break;
             }
         }
 
@@ -271,10 +279,10 @@ public class MarsEnv extends Environment {
             repaint();
         }
 
-        public void drawGarb(Graphics g, int x, int y, Color c) {
+        public void drawGarb(Graphics g, int x, int y, Color c, String letra) {
             super.drawObstacle(g, x, y);
             g.setColor(c);
-            drawString(g, x, y, defaultFont,"G");
+            drawString(g, x, y, defaultFont, letra);
         }
 
     }    
