@@ -140,11 +140,11 @@ public class MarsEnv extends Environment {
         
         public static final int MErr = 2; // max error in pick garb
         int nerr; // number of tries of pick garb
-        boolean r1HasGarb = false; // whether r1 is carrying garbage or not
-		boolean r1HasGarbVidro = false; // whether r1 is carrying garbage or not
-		boolean r1HasGarbPapel = false; // whether r1 is carrying garbage or not
-		boolean r1HasGarbPlastico = false; // whether r1 is carrying garbage or not
-		boolean r1HasGarbOrganico = false; // whether r1 is carrying garbage or not
+        boolean r1HasGarb = false; // whether r1 is carrying garbage toxico or not
+		boolean r1HasGarbVidro = false; // whether r1 is carrying garbage vidro or not
+		boolean r1HasGarbPapel = false; // whether r1 is carrying garbage papel or not
+		boolean r1HasGarbPlastico = false; // whether r1 is carrying garbage plastico or not
+		boolean r1HasGarbOrganico = false; // whether r1 is carrying garbage organico or not
 
         Random random = new Random(System.currentTimeMillis());
 
@@ -195,11 +195,11 @@ public class MarsEnv extends Environment {
                 return;
             }
             setAgPos(0, r1);
-            setAgPos(1, getAgPos(1)); // just to draw it in the view
-			setAgPos(2, getAgPos(2)); // just to draw it in the view
-			setAgPos(3, getAgPos(3)); // just to draw it in the view
-			setAgPos(4, getAgPos(4)); // just to draw it in the view
-			setAgPos(5, getAgPos(5)); // just to draw it in the view
+            setAgPos(1, getAgPos(1)); 
+			setAgPos(2, getAgPos(2)); 
+			setAgPos(3, getAgPos(3)); 
+			setAgPos(4, getAgPos(4)); 
+			setAgPos(5, getAgPos(5)); 
         }
         
         void moveTowards(int x, int y) throws Exception {
@@ -213,11 +213,11 @@ public class MarsEnv extends Environment {
             else if (r1.y > y)
                 r1.y--;
             setAgPos(0, r1);
-            setAgPos(1, getAgPos(1)); // just to draw it in the view
-			setAgPos(2, getAgPos(2)); // just to draw it in the view
-			setAgPos(3, getAgPos(3)); // just to draw it in the view
-			setAgPos(4, getAgPos(4)); // just to draw it in the view
-			setAgPos(5, getAgPos(5)); // just to draw it in the view
+            setAgPos(1, getAgPos(1)); 
+			setAgPos(2, getAgPos(2)); 
+			setAgPos(3, getAgPos(3)); 
+			setAgPos(4, getAgPos(4)); 
+			setAgPos(5, getAgPos(5)); 
         }
         
         void pickGarb() {
@@ -302,16 +302,16 @@ public class MarsEnv extends Environment {
 			
         }
         void burnGarb() {
-            // r2 location has garbage
+            // r4 location has garbage
             if (model.hasObject(GARB, getAgPos(3))) {
                 remove(GARB, getAgPos(3));
-            }else if (model.hasObject(GARBVIDRO, getAgPos(5))) {
+            }else if (model.hasObject(GARBVIDRO, getAgPos(5))) { // r6 location has garbage
                 remove(GARBVIDRO, getAgPos(5));
-            }else if (model.hasObject(GARBPAPEL, getAgPos(1))) {
+            }else if (model.hasObject(GARBPAPEL, getAgPos(1))) { // r2 location has garbage
                 remove(GARBPAPEL, getAgPos(1));
-            }else if (model.hasObject(GARBPLASTICO, getAgPos(2))) {
+            }else if (model.hasObject(GARBPLASTICO, getAgPos(2))) { // r3 location has garbage
                 remove(GARBPLASTICO, getAgPos(2));
-            }else if (model.hasObject(GARBORGANICO, getAgPos(4))) {
+            }else if (model.hasObject(GARBORGANICO, getAgPos(4))) { // r5 location has garbage
                 remove(GARBORGANICO, getAgPos(4));
             }
         }
@@ -320,7 +320,7 @@ public class MarsEnv extends Environment {
     class MarsView extends GridWorldView {
 
         public MarsView(MarsModel model) {
-            super(model, "Mars World", 600);
+            super(model, "Mars World - Antonio 12200988 e Elanne 10101180", 600);
             defaultFont = new Font("Arial", Font.BOLD, 18); // change default font
             setVisible(true);
             repaint();
@@ -330,11 +330,11 @@ public class MarsEnv extends Environment {
         @Override
         public void draw(Graphics g, int x, int y, int object) {
             switch (object) {
-                case MarsEnv.GARB: drawGarb(g, x, y,Color.white,"GT");  break;
+                case MarsEnv.GARB: drawGarb(g, x, y,Color.pink,"GT");  break;
 				case MarsEnv.GARBVIDRO: drawGarb(g, x, y,Color.green,"GV");  break;
 				case MarsEnv.GARBPLASTICO: drawGarb(g, x, y,Color.red,"GPL");  break;
 				case MarsEnv.GARBPAPEL: drawGarb(g, x, y,Color.blue,"GPA");  break;
-				case MarsEnv.GARBORGANICO: drawGarb(g, x, y,Color.black,"GO");  break;
+				case MarsEnv.GARBORGANICO: drawGarb(g, x, y,Color.white,"GO");  break;
             }
         }
 

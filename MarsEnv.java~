@@ -174,8 +174,11 @@ public class MarsEnv extends Environment {
             add(GARB, 3, 0);
 			add(GARBVIDRO, 1, 1);
             add(GARBPAPEL, GSize-1, 0);
+			add(GARBPAPEL, 5, 7);
+			add(GARB, 2, 4);
             add(GARBORGANICO, 1, 2);
             add(GARBPLASTICO, 0, GSize-2);
+			add(GARBPLASTICO, 6, 3);
             add(GARB, GSize-1, GSize-1);
 	
         }
@@ -341,7 +344,8 @@ public class MarsEnv extends Environment {
             c = Color.blue; //papel
             if (id == 0) {
                 c = Color.yellow;
-                if (((MarsModel)model).r1HasGarb) {
+                if (((MarsModel)model).r1HasGarb || ((MarsModel)model).r1HasGarbPlastico || ((MarsModel)model).r1HasGarbPapel || 
+				((MarsModel)model).r1HasGarbOrganico || ((MarsModel)model).r1HasGarbVidro) {
                     label += " - G";
                     c = Color.orange;
                 }
